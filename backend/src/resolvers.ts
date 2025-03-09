@@ -1,28 +1,27 @@
-import { db } from "@/db";
-import { jobs, companies } from "./db/schema";
-import { eq } from "drizzle-orm";
+import { jobs, companies } from "@/db/schema";
+import { getCompanies, getCompanyById, getCompanyJobs, getJobById, getJobs } from "@/db/queries";
 
 export const resolvers = {
     Query: {
         jobs: async () => {
-            return await db.select().from(jobs);
+            return getJobs();
+        },
+        job: async (_root: {}, { id }: { id: string }) => {
+            console.log(_root);
+            return getJobById(id);
         },
         companies: async () => {
-            return db.select().from(companies);
+            return getCompanies();
         },
     },
     Job: {
         company: async (job: typeof jobs.$inferInsert) => {
-            const company = await db.select().from(companies).where(eq(companies.id, job.companyId));
-
-            return company[0];
+            return getCompanyById(job.companyId);
         },
     },
     Company: {
         jobs: async (company: typeof companies.$inferInsert) => {
-            const result = await db.select().from(jobs).where(eq(jobs.companyId, company.id!));
-
-            return result;
+            return getCompanyJobs(company.id!);
         }
     }
 }

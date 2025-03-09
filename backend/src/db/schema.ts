@@ -12,7 +12,7 @@ export const companies = pgTable("companies", {
 export const jobs = pgTable("jobs", {
     id: text("id").primaryKey().$defaultFn(() => createId()).notNull(),
     title: text("title").notNull(),
-    companyId: text("companyId").references(() => companies.id, { onDelete: "cascade" }).notNull(),
+    companyId: text("company_id").references(() => companies.id, { onDelete: "cascade" }).notNull(),
     description: text("description"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
 });
