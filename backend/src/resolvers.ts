@@ -7,7 +7,6 @@ export const resolvers = {
             return getJobs();
         },
         job: async (_root: {}, { id }: { id: string }) => {
-            console.log(_root);
             return getJobById(id);
         },
         companies: async () => {

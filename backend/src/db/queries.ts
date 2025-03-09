@@ -1,5 +1,6 @@
 import { db } from "@/db";
 import { jobs, companies } from "@/db/schema";
+import { notFoundError } from "@/errors/notFoundError";
 import { eq } from "drizzle-orm";
 
 export async function getJobs() {
@@ -11,9 +12,15 @@ export async function getCompanies() {
 }
 
 export async function getJobById(id: string) {
-    return await db.query.jobs.findFirst({
+    const job = await db.query.jobs.findFirst({
         where: eq(companies.id, id)
     });
+
+    if (!job) {
+        throw notFoundError(`Job not found [${id}].`);
+    }
+
+    return job;
 }
 
 export async function getCompanyById(companyId: string) {
